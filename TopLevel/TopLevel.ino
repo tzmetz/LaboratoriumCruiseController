@@ -266,15 +266,13 @@ double getSpeed() {
 void logData(double Setpoint, double Input, double Output, unsigned long currTime) {
   diagFile = SD.open("test.txt", FILE_WRITE);
   if(diagFile) {  // Skips executing the function if the file did not open correctly
-    diagFile.print("Sp:");
     diagFile.print(Setpoint);
-    diagFile.print(", In:");
+    diagFile.print(",");
     diagFile.print(Input);
-    diagFile.print(", Out:");
+    diagFile.print(",");
     diagFile.print(Output);
-    diagFile.print(", t:");
+    diagFile.print(",");
     diagFile.println(currTime/1000.0);
     diagFile.close();
   }
 }
-
