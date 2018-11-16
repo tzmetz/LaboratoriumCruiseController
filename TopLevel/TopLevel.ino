@@ -14,6 +14,7 @@ boolean diag = true;
 #include <PID_v1.h>              // Library for PID features
 #include <LiquidCrystal.h>       // Library for LCD display 
 #include <SD.h>                  // Library for logging data to the SD card
+#include <EEPROM.h>              // Library for using EEPROM
 #include <SPI.h>                 // Library for SPI communications 
 #include <PinChangeInterrupt.h>  // The following libraries enable hardware interrupts to be used on any pin of the nano
 #include <PinChangeInterruptBoards.h>
@@ -56,7 +57,31 @@ LiquidCrystal lcd(rs, en, d4, d5, d6, d7); // Sets up the LCD display
 float Tsig; // Signal incoming from the throttle trigger hall effect sensor
 int MC_Val;
 unsigned long currTime; // Used for logging time in diagnostics 
-File diagFile; // Creates a new file object
+File diagFile; // Creates a new file object 
+
+//// EXPERIMENTAL
+//  union EEPROMvals {
+//    int valInt;
+//    byte valByte[4];
+//  } fileIndex;
+//  
+//  // On startup the arduino will read from its memory the last value of fileIndex
+//  for (int i = 0; i<4; i++) {
+//    fileIndex.valByte[i] = EEPROM.read(0+i);
+//  }
+//  
+//  // Advance fileIndex by 1
+//  fileIndex.valInt = fileIndex.valInt + 1;
+//  
+//  // Write this new value of fileIndex to arduino memory
+//  for (int i = 0; i <4; i++) {
+//     EEPROM.update( 0+i, fileIndex.valByte[i]);
+//  } 
+//  
+//  // Creating filename variable for naming the csv files in logData function
+//  char filename [12];
+//  sprintf(filename, "G1_%d", fileIndex.valInt);
+//// EXPERIMENTAL
 
 // Constants for converting DC generator voltage to speed 
 double
@@ -264,7 +289,7 @@ double getSpeed() {
 } 
 
 void logData(double Setpoint, double Input, double Output, unsigned long currTime) {
-  diagFile = SD.open("test.txt", FILE_WRITE);
+  diagFile = SD.open("test_1", FILE_WRITE);
   if(diagFile) {  // Skips executing the function if the file did not open correctly
     diagFile.print(Setpoint);
     diagFile.print(",");
